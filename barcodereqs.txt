@@ -1,0 +1,15 @@
+code128=0.3
+win32print>0.1
+PyQt5>4.19
+pillow
+itertools
+csv
+sys
+sqlite3
+pickle
+pandas
+datetime
+os 
+webbrowser
+logging
+threading

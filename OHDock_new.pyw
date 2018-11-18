@@ -6,7 +6,7 @@ B: Fixed some of said bugs, implemented some threading on statwindow
 C: fixed function-impairing bugs! still hangs on load of statswindow
 
 0.2.5 - threading for statswindow works! :)
-A - Started implementation of email,e still not entirely sure how it's gonna work. Some Gui Cleanup & Code class reshufflings
+A - Started implementation of email, still not entirely sure how it's gonna work. Some Gui Cleanup & Code class reshufflings
 
 0.2.6 - updated receipts
 A - implement Dump Fee
@@ -14,13 +14,23 @@ B - updated catmap - write to renew, fixed old receipts bug, switched logo
 
 0.2.7 - email working, made complaint text bigger 
 
-0.2.8 - "Close Dock Early" btn - buggy on redirect? 
+0.2.8 - "Close Dock Early" btn  --hidden until better placement found w screen res
+      - Old Receipt Filter working,shows dates
+      - Indicator skeleton
+      - file references made linux-friendly
+      
+0.3
+        
+
+
 
 
 
 TODO
-    EMAIL
+    better spacing for indicator
+    more tooltips
     Scheduled info graph 
+    normalize timestamps
     migrate graph to bokeh?
     IMPORT DONATIONS FROM LOG
     Have Company name be acceptable for inputs
@@ -29,7 +39,6 @@ TODO
     make categories/catmap editable
     animation/some vis feedback that things print/save
     more try/excepts to b safer
-    old receipts able to view by date, sortable
     Dump Fee Vertical Orientation when small enough
     make things look nicer
     get categories from db/default to some if no conn
@@ -48,17 +57,21 @@ import sqlite3
 import logging
 import os
 import threading
-import win32api
-import win32ui
-import win32print
+try:
+    import win32api
+    import win32ui
+    import win32print
+    import pythoncom
+    import apscheduler
+    WIN=True
+except:
+    WIN=False
+
 import numpy as np 
 import subprocess
-import pythoncom
 import OHMailer 
 import requests
 import json
-#import apscheduler
-
 #import datetime
 #import sqlcipher #for encrypted database
 
@@ -75,7 +88,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as Navigatio
 
 import matplotlib.pyplot as mp
 
-from win32com.taskscheduler import taskscheduler
+#from win32com.taskscheduler import taskscheduler
 #QMainWindow,QApplication,QPushButton
 
 
@@ -98,7 +111,41 @@ class Threader(QtCore.QThread):
     def run(self):
         fn(parent)
     
-
+class connectionStatusIndicator(QWidget):#small circle indicating connection to webserver
+    statusChanged=QtCore.pyqtSignal(bool)
+    def __init__(self,*arg,**kw):
+        super(connectionStatusIndicator,self).__init__(*arg,**kw)
+        self.status=False
+        self.sz=10
+        self.bfsz=self.sz+5
+#        print('test')
+        self.colrs={False:(255,0,0),True:(0,255,0)}
+        self.initUI()
+#        self.indicator=
+    def initUI(self):
+        
+        self.setMinimumSize(self.bfsz, self.bfsz)
+#        self.show()
+        self.repaint()
+    def checkConn(self):
+        pass
+    def changeStatus(self,status):
+        self.status=status
+        self.changeIndicator(status)
+    def changeIndicator(self,status):
+        pass
+    
+    def drawWidget(self,qp):
+        qp.setPen(QtGui.QColor(0,9,0))
+        qp.setBrush(QtGui.QColor(*self.colrs[self.status]))
+        qp.drawEllipse(0,0,self.sz,self.sz)
+    def paintEvent(self,e):
+        qp=QtGui.QPainter()
+        qp.begin(self)
+        self.drawWidget(qp)
+        qp.end()
+    def sizeHint(self):
+        return QtCore.QSize(self.bfsz,self.bfsz)
 class DonationWindow(QMainWindow):
     def __init__(self): #init header
         
@@ -174,11 +221,12 @@ class DonationWindow(QMainWindow):
         newdon.triggered.connect(self.NewCust)
         #custMenu.addAction('Browse Donors (tbd)')
         
-    
+        self.ind=connectionStatusIndicator()
+        
         self.closeDockEarlyBtn=QPushButton('Close \nDock \nEarly'.upper())
         self.closeDockEarlyBtn.setMaximumSize(80,80)
         earlylayout=QVBoxLayout()
-        earlylayout.addWidget(self.closeDockEarlyBtn)
+#        earlylayout.addWidget(self.closeDockEarlyBtn)
         earlylayout.addStretch(2)
         closewidg=QWidget()
         closewidg.setLayout(earlylayout)
@@ -214,9 +262,16 @@ class DonationWindow(QMainWindow):
         
         
         #App 
+        bottomlay=QHBoxLayout()
+        vrslbl=QLabel(text='<i>'+'version: '+__version__+'</i>',textFormat=1)
+        bottomlay.addWidget(vrslbl,0)
+        bottomlay.addWidget(self.ind,1)
+        
         cats=["Books","Furniture","Electronics","Household","Kitchen","Clothes","Toys","Misc."] #flexible inputs of what items to donate
         helplayout=QHBoxLayout()
-        layout.addLayout(helplayout,10,1,alignment=QtCore.Qt.AlignRight)
+        bottomlay.addLayout(helplayout,-1)
+        
+        self.ind.setToolTip('Connection Status')
         helpbutton=QPushButton()
         helpbutton.setCursor(QtCore.Qt.PointingHandCursor)
         hs=40
@@ -226,16 +281,16 @@ class DonationWindow(QMainWindow):
         helplayout.addWidget(QLabel("Help,Complaints,or Opinions Here ->",font=QtGui.QFont('Helvetica',12)))
         
         helplayout.addWidget(helpbutton)
-        helpbutton.clicked.connect(lambda:webbrowser.open_new(feedbacklink))
+        
+#        helpbutton.clicked.connect(lambda:print('test'))
+        helpbutton.clicked.connect(lambda:webbrowser.open_new(gitlink+r'/OHDock'))
         #cats={'270.0','271.0','272.0','273.0','274.0','275.0','276.0','277.0','278.0','279.0','280.0','281.0','282.0','284.0','293.0'}
-        self.don=Donation() #this new donation object
+        self.don=Donation() #this new donatiodn object
         
         pclayout = QGridLayout()
        
         #make add new user a modal window
         
-        vrslbl=QLabel(text='<i>'+'version: '+__version__+'</i>',textFormat=1)
-        layout.addWidget(vrslbl,10,1)
         self.inp=QLineEdit()
         self.inp.setPlaceholderText("Insert Existing Donor Name Here") #compare sets split at comma
         nm=self.inp.text()
@@ -342,6 +397,7 @@ margin-top: 2px;
 margin-bottom: 2px;
 border-radius: 4px;}""")
         layout.addWidget(split,1,1)
+        layout.addLayout(bottomlay,3,1,1,3)
         
         
         self.units=dict()
@@ -469,7 +525,7 @@ border-radius: 4px;}""")
             else: 
                 print('donation whoops!')
             if pr==1:
-                filename=wd+r'\test.png'
+                filename=os.path.join(wd,'test.png')
               #  print(filename)
               
                 self.x.save(filename)
@@ -597,7 +653,7 @@ class CloseDockEarlyWindow(QWidget):#threadify
                     print(rr.history[0].status_code==302)
                     print(rr.status_code==200)
                     if (rr.status_code ==200 and rr.history[0].status_code ==302):
-                        print('test')
+#                        print('test')
                         self.sessionAuthenticated.emit()
                         return True    
                     
@@ -695,7 +751,7 @@ border-radius: 4px;}""")
     def Window(self):
         #fns
         def donorselfn():
-            qrybase="SELECT * FROM Donations WHERE donorid = "#base string which gets updated based on selection
+            qrybase="SELECT timestamp FROM Donations WHERE donorid = "#base string which gets updated based on selection
             sel=self.vw.selectionModel()
             selid=sel.selection().indexes()[0].data()#id of donor selected
             
@@ -710,9 +766,8 @@ border-radius: 4px;}""")
         def reprintfn():
             ids=[i.data() for i in self.donvw.selectionModel().selection().indexes()]
             dons=donationParser(ids)
-            print(list(dons.values()))
             rec=Receipt(list(dons.values()))
-            fn=wd+r'\test.png'
+            fn=os.path.join(wd,'test.png')
             rec.render().save(fn)
             expprint(fn)
             
@@ -727,21 +782,47 @@ border-radius: 4px;}""")
         while modl.canFetchMore():
             modl.fetchMore()
         db.close()
-        
+        class multiColumnSortFilterProxy(QtCore.QSortFilterProxyModel):
+            def __init__(self,*args,**kwargs):
+                super(multiColumnSortFilterProxy,self).__init__(*args,**kwargs)
+                self.fname=''
+                self.lname=''
+            def setFName(self,name):
+                self.fname=name
+                self.setFilterFixedString('')
+                
+            def setLName(self,name):
+                self.lname=name
+                self.setFilterFixedString('')
+                
+                
+            def filterAcceptsRow(self,sourceRow,sourceParent,*arg,**kw):
+                model=self.sourceModel()
+                f=model.index(sourceRow,1)
+                l=model.index(sourceRow,2)
+                
+                if (self.fname.lower() in model.data(f).lower()) & (self.lname.lower() in model.data(l).lower()):
+                    return True
+                return False
        #Views & Models
         self.vw=QTableView()
         self.sel=QtCore.QItemSelectionModel()
         self.vw.setSelectionModel(self.sel)
-        self.sel.setModel(modl)
         
-        self.vw.setModel(modl)
+        self.filter=multiColumnSortFilterProxy()
+        self.filter.setSourceModel(modl)
+        
+        self.sel.setModel(self.filter)
+        self.vw.setModel(self.filter)#donors
+        self.vw.setColumnHidden(0,True)
+        
         self.vw.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.vw.setSelectionBehavior(QAbstractItemView.SelectRows) #selects rows
         self.vw.setSelectionMode(QAbstractItemView.SingleSelection)
         
         self.vw.selectionModel().selectionChanged.connect(donorselfn)#whenever the selected donor is changed, the donvw is updated w all the donations of that donor
 #       
-        self.donordons=QtSql.QSqlQueryModel()
+        self.donordons=QtSql.QSqlQueryModel()#dons for this donor
         self.donvw=QListView()
         self.donvw.setSelectionMode(QAbstractItemView.MultiSelection)
         self.donvw.setModel(self.donordons)
@@ -752,9 +833,18 @@ border-radius: 4px;}""")
         self.printbtn.clicked.connect(reprintfn)
         selbtn=QPushButton('Select all donations')
         
-        self.lkup=QLineEdit()
-        self.lkup.setPlaceholderText('Lookup Donor Name')
-            
+        #filter       
+       
+        def filterfn():
+            self.filter.setFName(self.fname.text())
+            self.filter.setLName(self.lname.text())
+        self.fname=QLineEdit()
+        self.fname.setPlaceholderText('Donor First Name')
+        self.fname.textEdited.connect(filterfn)     
+        
+        self.lname=QLineEdit()
+        self.lname.setPlaceholderText('Donor Last Name')
+        self.lname.textEdited.connect(filterfn)     
        
         split=QSplitter()#split between left right
         
@@ -762,7 +852,13 @@ border-radius: 4px;}""")
         
         custsplit=QSplitter(QtCore.Qt.Vertical)
         split.addWidget(custsplit)
-        custsplit.addWidget(self.lkup)
+        nameboxes=QGroupBox()
+        nlay=QHBoxLayout()
+        nameboxes.setLayout(nlay)
+        nlay.addWidget(self.fname)
+        nlay.addWidget(self.lname)
+        
+        custsplit.addWidget(nameboxes)
         custsplit.setChildrenCollapsible(False)
         custsplit.addWidget(self.vw)
         
@@ -1196,7 +1292,7 @@ class StatsWindow(QWidget): #window to look at statistics of donations
             def savexlfn(mail=False):
                 
                 dialog=QFileDialog.getSaveFileUrl(filter="Excel (*.xls)")
-                self.saveloc=dialog[0].path()[1:].replace("\\", "\\\\")
+                self.saveloc=dialog[0].path()[1:].replace("\\", "\\\\") #@todo make this cleaner
                 print(self.saveloc)
                 self.bar.show()
                 class calcthread(QtCore.QThread):
@@ -1219,7 +1315,7 @@ class StatsWindow(QWidget): #window to look at statistics of donations
                 self.thread.finished.connect(self.bar.hide)
                 def mailfn():
                   try:
-                      OHMailer.send(self.emailinp.text().strip(),filenm=self.saveloc)
+                      OHMailer.send(self.emailinp.text().strip(),filenm=self.saveloc,auth=credpath)
                       print('sent')
                       self.emailinp.clear()
                   except:
@@ -1546,9 +1642,9 @@ class Receipt(object): #only sees list of don objects, interfaced with either wh
         totalblurb="Total: $"+str(d)+".00"
         
         #LOGO
-        logo=Image.open(open(wd+r'\Visuals\Logo\bwlogo.png','rb'))
+        logo=Image.open(open(os.path.join(wd,'Visuals','Logo','bwlogo.png'),'rb'))
         logores=round(750)
-        logorat=logo.size[1]/logo.size[0] #make x coord=1
+        logorat=logo.size[1]/logo.size[0] #make x coord=1.join*
         logo=logo.resize((logores,round(logores*logorat)))#maintains aspect ratio
         logosect=Image.new('RGB',self.imsize,color="white")
         
@@ -1634,7 +1730,7 @@ class Receipt(object): #only sees list of don objects, interfaced with either wh
         for j in soc.keys():
             c=self.centerfn(soc[j]['c'],imsize=socsect.size)#returns percentage into pixels
             
-            setattr(self,j,Image.open(open(wd+r'\Visuals\%s.png'%j,'rb')))
+            setattr(self,j,Image.open(open(os.path.join(wd,'Visuals','Social','%s.png'%j),'rb')))
             q=getattr(self,j)
             q=q.resize((round(q.size[i]*self.img.size[0]/(q.size[0]*10)) for i in [0,1])) #makes all same size in x
             
@@ -1783,10 +1879,10 @@ class Stats(object):#make stats into own class so it can keep track of things al
 #                print('test????')
                 sortdates=sorted(days,key=lambda day:self.dayshiftfn(days,-days[datetime.datetime.today().strftime('%A')])[day])
                
-                print('test?')
+#                print('test?')
                 data[sortdates].to_excel(writer,startcol=1,startrow=1)
                 
-                print('test')
+#                print('test')
                 if self.upto!=None:
                     timestr=self.upto.strftime('%D')+' - '+datetime.datetime.now().strftime('%D')
                 else:
@@ -1946,7 +2042,7 @@ def QuickSplice(path=None):
                if x>=len(data):
                     don=False                   
     return donations 
-def donstodb(dons,path='test.db',write=0,inps=['All']): #writes list of Donation objects to database
+def donstodb(dons,path='Donations.db',write=0,inps=['All']): #writes list of Donation objects to database
     #timer=Timer()
     
     conn=sqlite3.connect(path)
@@ -2219,7 +2315,10 @@ def expprint(fn):
     hDC.EndPage ()
     hDC.EndDoc ()
     hDC.DeleteDC ()
+def linprint(fn):
+    im/Image.open(fn) 
     
+    os.system() #https://smallbusiness.chron.com/sending-things-printer-python-58655.html
 """global variables below here
 """
 #webbrowser.open_new(feedbacklink)
@@ -2227,19 +2326,19 @@ def expprint(fn):
 #wd=os.path.dirname(os.path.realpath(sys.argv[0])) #gets current working directory for this file
 wd=os.getcwd()
 
-logging.basicConfig(filename=wd+r'/Data/docklog.log',level=logging.INFO)
+logging.basicConfig(filename=os.path.join(wd,'Data','docklog.log'),level=logging.INFO)
 logging.debug('connected to log')
 
-fontpath=wd+r'\Fonts'
+fontpath=os.path.join(wd,'Fonts')
 
-dpath=wd+r'\Data'
-dbname=r'\donations.db'
+dpath=os.path.join(wd,'Data')
+dbname='donations.db'
 #dbname=r'\donations (1).db'
-dbpath=dpath+dbname
+dbpath=os.path.join(dpath,dbname)
 
-tokenpath=wd+r'\dockcredentials.json'#credentials to ohworker email
+tokenpath=os.path.join(wd,'Auths','dockcredentials.json')#credentials to ohworker email
 
-credpath=wd+r'\dockcredentials.json'#credentials to ohworker email
+credpath=os.path.join(wd,'dockcredentials.json')#credentials to ohworker email
 #check if current version is experimental
 expdict={True:{'str':'Experimental','file':'OHDock-new'},False:{'str':'Stable','file':'OHDock'}}
 

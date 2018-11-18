@@ -48,7 +48,7 @@ def connwrite(path,commandtuple,many=0):
 """
 #link to google form thing
 feedbacklink=r'https://docs.google.com/forms/d/e/1FAIpQLSct6bhTmrjgvchtm0lEnV_-46xalMgC93DRTiUic6AjMnZILQ/formResponse'
-
+gitlink=r'https://github.com/OrgansWithoutBodies/OHSuite/wiki'
 
 """Dicts/Lists
 ==================================================================================

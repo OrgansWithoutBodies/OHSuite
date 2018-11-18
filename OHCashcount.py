@@ -8,7 +8,7 @@ Notes:
     .0:Started app
     .1:Functional
     .2:bigger buttons for touch
-    .3:
+    .3:better sizes, more comments,
 TODO:
     Able to count both how much to remove to start day w/ given input amt & how m
     Make able to translate text to spanish
