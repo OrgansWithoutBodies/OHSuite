@@ -3,3 +3,45 @@ INFO:root:started write to excel
 INFO:root:started write to excel
 INFO:root:started write to excel
 INFO:root:wrote 1 donation(s) into db at 22:36:51, 2018-11-17
+INFO:bokeh.server.server:Starting Bokeh server version 1.0.1 (running on Tornado 5.1.1)
+INFO:bokeh.server.server:Starting Bokeh server version 1.0.1 (running on Tornado 5.1.1)
+INFO:bokeh.server.server:Starting Bokeh server version 1.0.1 (running on Tornado 5.1.1)
+INFO:tornado.access:200 GET / (::1) 73.74ms
+INFO:tornado.access:200 GET / (::1) 155.24ms
+INFO:tornado.access:200 GET /static/css/bokeh.min.css?v=efb697cb26fd2e434718d8faf7eb2f7c (::1) 0.66ms
+INFO:tornado.access:200 GET /static/css/bokeh-widgets.min.css?v=70309c82e3aa39603ac40c5bb1a78b71 (::1) 0.37ms
+INFO:tornado.access:200 GET /static/css/bokeh-tables.min.css?v=d57abcf9c50b1c4acae4f35d2eb9e7a5 (::1) 0.49ms
+INFO:tornado.access:200 GET / (::1) 268.68ms
+INFO:tornado.access:200 GET /static/js/bokeh-gl.min.js?v=753c426ee0cd6b602b26144f1ebb9de7 (::1) 0.52ms
+INFO:tornado.access:200 GET /static/css/bokeh-widgets.min.css?v=70309c82e3aa39603ac40c5bb1a78b71 (::1) 0.38ms
+INFO:tornado.access:200 GET /static/css/bokeh-tables.min.css?v=d57abcf9c50b1c4acae4f35d2eb9e7a5 (::1) 0.42ms
+INFO:tornado.access:200 GET /static/js/bokeh-gl.min.js?v=753c426ee0cd6b602b26144f1ebb9de7 (::1) 0.67ms
+INFO:tornado.access:200 GET /static/css/bokeh-widgets.min.css?v=70309c82e3aa39603ac40c5bb1a78b71 (::1) 0.58ms
+INFO:tornado.access:200 GET /static/css/bokeh-tables.min.css?v=d57abcf9c50b1c4acae4f35d2eb9e7a5 (::1) 0.70ms
+INFO:tornado.access:200 GET /static/css/bokeh.min.css?v=efb697cb26fd2e434718d8faf7eb2f7c (::1) 0.63ms
+INFO:tornado.access:200 GET /static/js/bokeh-gl.min.js?v=753c426ee0cd6b602b26144f1ebb9de7 (::1) 0.42ms
+INFO:tornado.access:200 GET /static/js/bokeh-widgets.min.js?v=9087b3cf4482c2739cb62b9b7fd70282 (::1) 304.37ms
+INFO:tornado.access:200 GET /static/js/bokeh-widgets.min.js?v=9087b3cf4482c2739cb62b9b7fd70282 (::1) 28.80ms
+INFO:tornado.access:200 GET /static/css/bokeh.min.css?v=efb697cb26fd2e434718d8faf7eb2f7c (::1) 0.42ms
+INFO:tornado.access:200 GET /static/js/bokeh-tables.min.js?v=3583493c61c0b5da69a4bdfd03fce30f (::1) 304.76ms
+INFO:tornado.access:200 GET /static/js/bokeh-widgets.min.js?v=9087b3cf4482c2739cb62b9b7fd70282 (::1) 15.26ms
+INFO:tornado.access:200 GET /static/js/bokeh-tables.min.js?v=3583493c61c0b5da69a4bdfd03fce30f (::1) 29.89ms
+INFO:tornado.access:200 GET /static/js/bokeh-tables.min.js?v=3583493c61c0b5da69a4bdfd03fce30f (::1) 14.83ms
+INFO:tornado.access:200 GET /static/js/bokeh.min.js?v=daaf25186762b6c660a2d3bc289ac434 (::1) 312.44ms
+INFO:tornado.access:200 GET /static/js/bokeh.min.js?v=daaf25186762b6c660a2d3bc289ac434 (::1) 36.39ms
+INFO:tornado.access:200 GET /static/js/bokeh.min.js?v=daaf25186762b6c660a2d3bc289ac434 (::1) 21.27ms
+WARNING:tornado.access:404 GET /favicon.ico (::1) 0.29ms
+INFO:tornado.access:101 GET /ws?bokeh-protocol-version=1.0&bokeh-session-id=p3pNkUfw1v9CPNLyWjZTncg6QHgt3BaRvFvyaBcppjg0 (::1) 0.53ms
+INFO:bokeh.server.views.ws:WebSocket connection opened
+INFO:bokeh.server.views.ws:ServerConnection created
+WARNING:tornado.access:404 GET /favicon.ico (::1) 0.48ms
+WARNING:tornado.access:404 GET /favicon.ico (::1) 0.34ms
+INFO:tornado.access:101 GET /ws?bokeh-protocol-version=1.0&bokeh-session-id=X4npIn8FiJ2TfjPzg0e4Z1idfqM7jL8fbA3YXrYwUVtP (::1) 0.57ms
+INFO:bokeh.server.views.ws:WebSocket connection opened
+INFO:bokeh.server.views.ws:ServerConnection created
+INFO:tornado.access:101 GET /ws?bokeh-protocol-version=1.0&bokeh-session-id=G6kSfEhaSQ60rlgz2ZubiY8vPhRrdm67xgiWss7FHNHx (::1) 1.22ms
+INFO:bokeh.server.views.ws:WebSocket connection opened
+INFO:bokeh.server.views.ws:ServerConnection created
+INFO:bokeh.server.views.ws:WebSocket connection closed: code=1001, reason=None
+INFO:bokeh.server.views.ws:WebSocket connection closed: code=1001, reason=None
+INFO:bokeh.server.views.ws:WebSocket connection closed: code=1001, reason=None

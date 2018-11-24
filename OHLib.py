@@ -58,6 +58,7 @@ FL=["First","Last"] #useful for dict comprehensions
 rainbow=['Red','Orange','Yellow','Green','Blue','Purple']
 
 
+DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 """Stats?
 ==================================================================================
 """ 

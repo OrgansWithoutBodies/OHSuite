@@ -670,7 +670,7 @@ class CloseDockEarlyWindow(QWidget):#threadify
     def closedockfn(self,usr,pwd,reason=None): #constructs data & calls api stuff
     
         timestrcode='%FT%TZ' #strftime format for posting time - [DATE]T[TIME]Z
-        timekey="early_closes" #key for dock time slot name
+        timekey="early_closes"#key for dock time slot name
         reskey='reason'
         data={timekey:datetime.datetime.now().strftime(timestrcode)}
         if reason is not None:
