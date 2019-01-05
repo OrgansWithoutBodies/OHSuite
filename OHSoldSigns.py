@@ -89,9 +89,9 @@ def sheetify(objfn,n=(2,6),lw=3,res=100,lbllist=None,side='front'):
             drsh.line( (0,j*sheetsize[1]/ny,sheetsize[0],j*sheetsize[1]/ny), fill=0,width=lw) #horizontals
         drsh.line( (i*sheetsize[0]/nx,0,i*sheetsize[0]/nx,sheetsize[1]), fill=0,width=lw) #vertical
     return sheet
-def frontAndBackSheets(objfn,n=(2,6),lw=3,res=100,lbllist=None):
+def frontAndBack(objfn,n=(2,6),lw=3,res=100,lbllist=None):
     sheets=[]
-    for s in {'front','back'}:
+    for s in ['front','back']:
         sheets.append(sheetify(objfn,n,lw,res,lbllist,side=s))
     return sheets
         
@@ -107,10 +107,10 @@ def alphabet(rng={'upper'}):
                 alph.append(chr(loc))
     return list(alph)
 #
-def randomLabels(n=2*6,numspots=3):
+def randomLabels(n=(2,6),numspots=2):
     alph=alphabet()
     ralph=[]
-    for nn in range(n):
+    for nn in range(n[0]*n[1]):
         spots=''
         for s in range(numspots):
             r=random.randint(0,len(alph)-1)
@@ -119,9 +119,16 @@ def randomLabels(n=2*6,numspots=3):
         ralph.append(spots)
             
     return ralph
-
-
-
+#base method, can just run w/o arguments for good output
+    #
+def renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=1):
+    sheets=[]
+    for sht in range(numsheets):
+        if lblmethod=='random':
+            lbllist=randomLabels(n=n)
+        sheets.append(frontAndBack(objfn=soldTag,n=n,lw=lw,res=res,lbllist=lbllist))
+    return sheets
+    
 ###
 """
 #@TODOs
