@@ -46,16 +46,17 @@ def soldTag(res=100, n=(2,6),lbl=None,side='front'):
                 justamt=(attsize[0]/2,0)
             dtag.multiline_text([round(tagsize[i]*locrat[i]-justamt[i]) for i in range(2)],string,anchor='center',font=font)#takes the size of the tag, multiplies it by location ratio, then subtracts pixelsize of text - needed bc default action of text is to go from top-left corner, this ends up doing from the center
             #add line here
+    ubuntum=os.path.join(wd,"Fonts","ubuntu","Ubuntu-M.ttf")
     if side=='front':
-        centertext(fs,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),90))
-        centertext(fyn,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),12))
-        centertext(frontbtm,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),12))
-        centertext(frontfields,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),12))
-        centertext(lbltxt,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),15))
+        centertext(fs,  font=ImageFont.truetype(ubuntum,90))
+        centertext(fyn,  font=ImageFont.truetype(ubuntum,12))
+        centertext(frontbtm,  font=ImageFont.truetype(ubuntum,12))
+        centertext(frontfields,  font=ImageFont.truetype(ubuntum,12))
+        centertext(lbltxt,  font=ImageFont.truetype(ubuntum,15))
     elif side=='back':
-        centertext(backmgmt,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),9),justify='center') 
-        centertext(backfields,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),9),justify='center') 
-        centertext(backblurb,  font=ImageFont.truetype(os.path.join(wd,"fonts","ubuntu","Ubuntu-M.ttf"),9),justify='center') 
+        centertext(backmgmt,  font=ImageFont.truetype(ubuntum,9),justify='center') 
+        centertext(backfields,  font=ImageFont.truetype(ubuntum,9),justify='center') 
+        centertext(backblurb,  font=ImageFont.truetype(ubuntum,9),justify='center') 
         
         
     else:
