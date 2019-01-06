@@ -25,7 +25,7 @@ SECRET_KEY = '8)y1@)89%%w4*wjsafk3&xxh)givn7*d()hd3umi=5^ttj!bkp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['vsipaddress.com','localhost']
 
 
 # Application definition

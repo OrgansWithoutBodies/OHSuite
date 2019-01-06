@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path
 from OHWebInterface import views as intviews
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', admin.site.urls),
     path('request/',intviews.req)
 ]
