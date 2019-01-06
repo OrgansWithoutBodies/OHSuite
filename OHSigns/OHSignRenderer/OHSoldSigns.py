@@ -1,16 +1,17 @@
 ###
 #IMPORTS - outside scripts to be used in this file. anything not declared with "import" can't be accessed from this file. 
 from PIL import Image, ImageDraw, ImageFont#Python's Image Library 
-import os #used to save & load files
+import os #used to save & load files, ensures compatability on all operating systems
 import random #random number generator
 import tempfile #makes random-named files & stores only until no longer being used
-
+          
 ###
-#TEXT DEFINITIONS
-#Text:(ratio of location on slip) - each different variable has a different font  & size
-
-#BACK
+wd=os.getcwd()#folder script is stored in, used as relative point at which to save
+print(wd)
+###
+#TEMPLATE DEFINITIONS
 fieldcorn=(.4,.8)
+ubuntum=os.path.join(wd,"Fonts","Ubuntu","Ubuntu-M.ttf")
 TEMPLATES={
     'BACK':{
         'backblurb':{"Once you, the customer, have purchased an item, you are fully responsible for it. \nIf you choose to leave the item and return for it please attach this sign to it until \nyou return. Items must be picked up the same day they are purchased unless arrangements \nfor delivery through the store are made. By signing this form, you the customer \nacknowledge that Opportunity House is not responsible for any damage, re-sell, \nor loss of an item once it has been purchased, and NO REFUNDS will be given. \nDue to the minimum floor/storage space, of your item is left after close \nof the purchase date the store reserves the right to re-sell the item.":(.5,.3)},
@@ -24,14 +25,18 @@ TEMPLATES={
         "frontfields":{"Date:":(.5,.05),'Cashier Initials:':(.25,.6),'Customer Initials:':(.65,.6),'Paid:':(.25,.75)},
         'lblloc':{'':(.1,.1)}
     },
-    'NEW':{
-
-    }
+    # 'NEW':{#box around sign, 2-3 per page,logo,underlines
+    #     {'textsize':12,}:{"Date":(),"Associates Initials":(), "Customer Name":(),"Customer Phone #":(),"Delivery Fee":(),"Date Paid":(),"Scheduled Delivery Date":()},
+    #     {'textsize':80,'font':ubuntum}:{'SOLD!':()},
+    #     {'textsize':12,'font':ubuntum}:{'Please pick up your items by the end of the day unless you have paid for us to Deliver it to you.':()},
+    #     {'textsize':10,'font':ubuntum}:{'Vacaville - $30.00':(),'Fairfield - $45.00':()},
+    # }
+    #@TODO - dict-able PIL objects,  
 }
-          
 ###
-wd=os.getcwd()#folder script is stored in, used as relative point at which to save
-
+class Module(object):#graphical object representing certain aspect of sign, can contain other modules - has css-like attributes & pseudo-elements
+    def __init__(self):
+        pass
 #### 
 #FUNCTIONS
 #
@@ -52,7 +57,6 @@ def soldTag(res=100, n=(2,6),lbl=None,side='front'):
                 justamt=(attsize[0]/2,0)
             dtag.multiline_text([round(tagsize[i]*locrat[i]-justamt[i]) for i in range(2)],string,anchor='center',font=font)#takes the size of the tag, multiplies it by location ratio, then subtracts pixelsize of text - needed bc default action of text is to go from top-left corner, this ends up doing from the center
             #add line here
-    ubuntum=os.path.join(wd,"Fonts","Ubuntu","Ubuntu-M.ttf")
 
     if side=='front':
         frnt=TEMPLATES['FRONT']
@@ -138,14 +142,14 @@ def renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=1):
             lbllist=randomLabels(n=n)
         sheets.append(frontAndBack(objfn=soldTag,n=n,lw=lw,res=res,lbllist=lbllist))
     return sheets
-
+#
 def saveSheets(sheets,fn=None):
     if fn is None:
         #fn=tempfile.TemporaryFile(suffix='pdf').name
         fn='temp.pdf'
         print(fn)
 
-    sheets[0][0].save(fp=fn,save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0] ]) 
+    sheets[0][0].save(fp=fn,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
 ###
 """
 #@TODOs 
