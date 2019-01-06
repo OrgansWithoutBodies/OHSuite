@@ -3,6 +3,7 @@
 from PIL import Image, ImageDraw, ImageFont#Python's Image Library 
 import os #used to save & load files
 import random #random number generator
+import tempfile #makes random-named files & stores only until no longer being used
 
 ###
 #TEXT DEFINITIONS
@@ -120,7 +121,7 @@ def randomLabels(n=(2,6),numspots=2):
         ralph.append(spots)
             
     return ralph
-#base method, can just run w/o arguments for good output
+#highest-level method for this file, can just run w/o arguments for good output
     #
 def renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=1):
     sheets=[]
@@ -129,9 +130,16 @@ def renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=1):
             lbllist=randomLabels(n=n)
         sheets.append(frontAndBack(objfn=soldTag,n=n,lw=lw,res=res,lbllist=lbllist))
     return sheets
-    
+
+def saveSheets(sheets,fn=None):
+    if fn is None:
+        #fn=tempfile.TemporaryFile(suffix='pdf').name
+        fn='temp.pdf'
+        print(fn)
+
+    sheets[0][0].save(fp=fn,save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0] ]) 
 ###
 """
-#@TODOs
-    
+#@TODOs 
+   underlines
 """

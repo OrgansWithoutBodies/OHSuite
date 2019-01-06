@@ -1,0 +1,12 @@
+{%extends "OHWebInterface/base.html"%}
+
+{%block pagecontent%}
+	{%for field in form%}
+
+					<span class='formcontlabel'>
+					{{field.label_tag}}</span>
+					<br>
+					<span class="formcontinp">{{field}}</span>
+					<p>
+				{%endfor%}
+{%endblock pagecontent%}
