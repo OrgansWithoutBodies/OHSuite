@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont#Python's Image Library
 import os #used to save & load files, ensures compatability on all operating systems
 import random #random number generator
 import tempfile #makes random-named files & stores only until no longer being used
-          
+import io
 ###
 wd=os.getcwd()#folder script is stored in, used as relative point at which to save
 print(wd)
@@ -148,8 +148,11 @@ def saveSheets(sheets,fn=None):
         #fn=tempfile.TemporaryFile(suffix='pdf').name
         fn='temp.pdf'
         print(fn)
+
+    temp=io.BytesIO()
     fl=os.path.join(wd,'OHSignRenderer',fn)
-    sheets[0][0].save(fp=fl,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
+    sheets[0][0].save(fp=temp,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
+    return temp
 ###
 """
 #@TODOs 
