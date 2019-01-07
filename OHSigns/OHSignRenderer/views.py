@@ -12,13 +12,14 @@ def renderRequest(request,**kw):
 	print(request)
 	print(kw)
 	# fn=os.path.join(os.getcwd(),'renderedSigns','temp.pdf')
-	fn='temp.pdf'
+	f='temp.pdf'
 	r=signs.renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=3)
-	fl,fn=signs.saveSheets(r)
+	fl,fn=signs.saveSheets(r,fn=f)
 	print(fn)
+
 	# response=FileResponse(fl,as_attachment=True,filename='test.pdf')
 	response=HttpResponse(fl,content_type='application/pdf')
-	response['Content-Disposition'] = 'attachment; filename="{0}"'.format(fn)
+	response['Content-Disposition'] = 'attachment; filename="{0}"'.format(fl.name)
 	return response
 """
 changeable filename
