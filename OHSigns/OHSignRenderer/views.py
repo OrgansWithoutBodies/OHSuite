@@ -5,8 +5,8 @@ from django.http import HttpResponse,FileResponse
 from . import OHSoldSigns as signs
 
 # 
-def test():
-	pass
+def test(request):
+	return request
 def renderRequest(request,**kw):
 	
 	print(request)
@@ -14,10 +14,11 @@ def renderRequest(request,**kw):
 	# fn=os.path.join(os.getcwd(),'renderedSigns','temp.pdf')
 	fn='temp.pdf'
 	r=signs.renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=3)
-	tmp=signs.saveSheets(r)
-
-	response=FileResponse(tmp,as_attachment=True,filename='testing.pdf')
-	# response['Content-Disposition'] = 'attachment; filename="{0}"'.format(fn)
+	fl,fn=signs.saveSheets(r)
+	print(fn)
+	# response=FileResponse(fl,as_attachment=True,filename='test.pdf')
+	response=HttpResponse(fl,content_type='application/pdf')
+	response['Content-Disposition'] = 'attachment; filename="{0}"'.format(fn)
 	return response
 """
 changeable filename

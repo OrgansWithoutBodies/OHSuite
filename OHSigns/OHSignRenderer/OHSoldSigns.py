@@ -31,12 +31,25 @@ TEMPLATES={
     #     {'textsize':12,'font':ubuntum}:{'Please pick up your items by the end of the day unless you have paid for us to Deliver it to you.':()},
     #     {'textsize':10,'font':ubuntum}:{'Vacaville - $30.00':(),'Fairfield - $45.00':()},
     # }
+#     'tagstyle':{'image':{'imsize':(5,3.53),'nxy':(1,1),'res':80},
+        #          'description':{'c':[.5,1/8],'size':60,'font':'timesbd.ttf'}, 
+        #          'price':{'c':[.5,3/8],"font":"timesbd.ttf",'size':120},
+        #          'barcode':{'c':[-.05,.65],'rot':0,'underbar':True,'shape':[5,100]},
+        #          'underbar':{'font':'MINI 7 Bold.ttf','underdist':10,'size':20},
+        #          'month':{'c':[.95,.9],"font":"timesbd.ttf","size":40},
+        #          'combo':{'c':[.5,.6],'font':'timesbd.ttf','size':20,'rot':20}})   
+    #    
+# furnstyle=pandas.DataFrame({'image':{'imsize':(8.5,11),'nxy':(2,5),'res':150},
+#          'description':{'c':[.15,4.5/8],'size':20,'font':'timesbd.ttf','text':'Description:'}, 
+#          'price':{'c':[.5,3/8],"font":"timesbd.ttf",'size':80},
+#          'barcode':{'c':[.8,.1],'underbar':False,'rot':90,'shape':[2,30]},
+#          'underbar':{'font':'MINI 7 Bold.ttf','underdist':10,'size':20},
+#          'month':{'c':[.95,.9],"font":"timesbd.ttf","size":10},
+#          'blurb':{'c':[0.5,.1],"font":"timesbd.ttf","size":15,'text':'** Items must be picked up before 6pm on the \n  day of purchase. No Exceptions. Thank You! **'},
+#          'combo':{'c':[.5,.6],'font':'timesbd.ttf','size':15}})
+
     #@TODO - dict-able PIL objects,  
 }
-###
-class Module(object):#graphical object representing certain aspect of sign, can contain other modules - has css-like attributes & pseudo-elements
-    def __init__(self):
-        pass
 #### 
 #FUNCTIONS
 #
@@ -146,13 +159,12 @@ def renderSheets(n=(2,6),lw=3,res=100,lblmethod='random',numsheets=1):
 def saveSheets(sheets,fn=None):
     if fn is None:
         #fn=tempfile.TemporaryFile(suffix='pdf').name
-        fn='temp.pdf'
-        print(fn)
-
-    temp=io.BytesIO()
-    fl=os.path.join(wd,'OHSignRenderer',fn)
-    sheets[0][0].save(fp=temp,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
-    return temp
+        fl=io.BytesIO(fn)
+    else:
+        fl=open(os.path.join(wd,'OHSignRenderer','renderedSigns',fn),'wb')
+        print(fl)
+    sheets[0][0].save(fp=fl,format='PDF',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
+    return fl,fn
 ###
 """
 #@TODOs 
