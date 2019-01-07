@@ -11,7 +11,7 @@ print(wd)
 ###
 #TEMPLATE DEFINITIONS
 fieldcorn=(.4,.8)
-ubuntum=os.path.join(wd,"Fonts","Ubuntu","Ubuntu-M.ttf")
+ubuntum=os.path.join(wd,"OHSignRenderer","Fonts","Ubuntu","Ubuntu-M.ttf")
 TEMPLATES={
     'BACK':{
         'backblurb':{"Once you, the customer, have purchased an item, you are fully responsible for it. \nIf you choose to leave the item and return for it please attach this sign to it until \nyou return. Items must be picked up the same day they are purchased unless arrangements \nfor delivery through the store are made. By signing this form, you the customer \nacknowledge that Opportunity House is not responsible for any damage, re-sell, \nor loss of an item once it has been purchased, and NO REFUNDS will be given. \nDue to the minimum floor/storage space, of your item is left after close \nof the purchase date the store reserves the right to re-sell the item.":(.5,.3)},
@@ -148,7 +148,7 @@ def saveSheets(sheets,fn=None):
         #fn=tempfile.TemporaryFile(suffix='pdf').name
         fn='temp.pdf'
         print(fn)
-    fl=os.path.join(wd,fn)
+    fl=os.path.join(wd,'OHSignRenderer',fn)
     sheets[0][0].save(fp=fl,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
 ###
 """
