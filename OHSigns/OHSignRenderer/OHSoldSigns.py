@@ -58,7 +58,6 @@ def soldTag(res=100, n=(2,6),lbl=None,side='front'):
             dtag.multiline_text([round(tagsize[i]*locrat[i]-justamt[i]) for i in range(2)],string,anchor='center',font=font)#takes the size of the tag, multiplies it by location ratio, then subtracts pixelsize of text - needed bc default action of text is to go from top-left corner, this ends up doing from the center
             #add line here
 
-    ubuntum=os.path.join(wd,"Fonts","Ubuntu","Ubuntu-M.ttf")
     if side=='front':
         frnt=TEMPLATES['FRONT']
         centertext(frnt['fs'],  font=ImageFont.truetype(ubuntum,90)) 
@@ -149,8 +148,8 @@ def saveSheets(sheets,fn=None):
         #fn=tempfile.TemporaryFile(suffix='pdf').name
         fn='temp.pdf'
         print(fn)
-
-    sheets[0][0].save(fp=fn,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
+    fl=os.path.join(wd,fn)
+    sheets[0][0].save(fp=fl,format='pdf',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
 ###
 """
 #@TODOs 
