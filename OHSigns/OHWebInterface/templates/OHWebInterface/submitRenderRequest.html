@@ -1,7 +1,7 @@
 {%extends "OHWebInterface/base.html"%}
 
 {%block pagecontent%}
-	<form action="submit">
+	<form action="submit" method="post">
 	{%csrf_token%}
 	{%for field in form%}
 
