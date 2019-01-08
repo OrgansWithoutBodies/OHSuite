@@ -160,9 +160,10 @@ def saveSheets(sheets,fn=None):
     if fn is None:
         #fn=tempfile.TemporaryFile(suffix='pdf').name
         fl=io.BytesIO(fn)
+        
     else:
         fl=open(os.path.join(wd,'OHSignRenderer','static','renderedSigns',fn),'wb+')
-        print(fl)
+        
     sheets[0][0].save(fp=fl,format='PDF',save_all=True,append_images=[pg for sht in sheets for pg in sht if pg!=sheets[0][0]]) 
     return fl,fn
 ###

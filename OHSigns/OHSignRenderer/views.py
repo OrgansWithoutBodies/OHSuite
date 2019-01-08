@@ -1,7 +1,9 @@
 import os 
 
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse,FileResponse
+# from django.core.servers.basehttp import FileWrapper
 from . import OHSoldSigns as signs
 
 # 
@@ -18,8 +20,9 @@ def renderRequest(request,**kw):
 	print(fn)
 
 	# response=FileResponse(fl,as_attachment=True,filename='test.pdf')
-	response=HttpResponse(fl.read(),content_type='application/pdf')
+	response=HttpResponse(open(fl.name,'rb+'),content_type='application/pdf')
 	response['Content-Disposition'] = 'attachment; filename="{0}"'.format(fn)
+	# response['X-Accel-Redirect'] = fn
 	return response
 """
 changeable filename
