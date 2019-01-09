@@ -1,0 +1,34 @@
+<template>
+<div class="card">
+	<b class="name"> {{donor.lastname}}, {{donor.firstname}}</b> <p/>
+	<i class="address"> {{donor.address}}</i><p/>
+	<u class="phone"> {{donor.phone}}</u>
+</div>
+</template>
+
+<script>
+export default {
+  name: 'DonorCard',
+  data () {
+    return {
+      donor: {firstname: 'Test',
+        lastname: 'Testerson',
+        address: '215 test ct',
+        phone: '12345',
+        email: 'test'}
+    }
+  }
+}
+</script>
+
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.card{
+	background-color:#ff0000;
+}
+.phone {
+  color: #42b983;
+}
+</style>
+	
