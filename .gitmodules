@@ -1,6 +1,6 @@
-[submodule "OHPickupAdmin"]
-	path = OHPickup/OHPickupAdmin
-	url = https://github.com/OrgansWithoutBodies/OHPickupAdmin
+
+
+
 [submodule "OHSite"]
 	path = OHSite
 	url = https://github.com/OrgansWithoutBodies/OHSite
