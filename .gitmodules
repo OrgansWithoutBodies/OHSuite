@@ -7,3 +7,6 @@
 [submodule "OHSigns"]
 	path = OHSigns
 	url = https://github.com/OrgansWithoutBodies/OHSigns
+[submodule "OHPickup/OHPickupAdmin"]
+	path = OHPickup/OHPickupAdmin
+	url = https://github.com/OrgansWithoutBodies/OHPickupAdmin
